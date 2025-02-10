@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'aws.training'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.36'
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.36'
+    implementation 'org.slf4j:slf4j-api:2.1.0-alpha1'
+    implementation 'org.slf4j:slf4j-simple:2.1.0-alpha1'
+    implementation group: 'com.amazonaws', name: 'aws-lambda-java-core', version: '1.2.3'
+    implementation group: 'com.amazonaws', name: 'aws-lambda-java-events', version: '3.14.0'
+    implementation 'com.amazonaws:aws-java-sdk-sns:1.12.780'
+    implementation 'com.amazonaws:aws-java-sdk-sqs:1.12.780'
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.780'
+    implementation group: 'software.amazon.awssdk', name: 'secretsmanager', version: '2.30.0'
+    implementation group: 'software.amazon.awssdk', name: 'apache-client', version: '2.30.0'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.5'
+
+}
+
+shadowJar {
+    minimize()
+    dependencies {
+    }
+    archiveClassifier.set('')
+}
+
+tasks.register('buildZip', Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtimeClasspath
+    }
+}
+
+build.dependsOn buildZip

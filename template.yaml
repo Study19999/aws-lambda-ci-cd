@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM Template for SQS to SNS - lambda
+
+Parameters:
+  SQSQueueArn:
+    Type: String
+    Description: The ARN of the SQS Queue
+
+Resources:
+  Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://maria.nascu.webapp-bucket/lambda.zip
+      Handler: aws.training.handler.LambdaHandler::handleRequest
+      Runtime: java17
+      Timeout: 30
+      MemorySize: 128
+      Role: arn:aws:iam::788620120643:role/WebApp-Stack-UploadsNotificationLambdaExecutionRole-TVlsjUkW50WG
+      Environment:
+        Variables:
+          REGION: us-east-1
+          SNS_TOPIC_ARN: arn:aws:sns:us-east-1:788620120643:WebApp-UploadsNotificationTopic
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !Ref SQSQueueArn
+            BatchSize: 10
