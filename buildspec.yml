@@ -11,9 +11,9 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-      - sam package --s3-bucket maria.nascu.webapp-bucket --template-file samTemplate.yml --output-template-file outputSamTemplate.yml
+      - sam package --s3-bucket maria.nascu.webapp-bucket --template-file samTemplate.yaml --output-template-file outputSamTemplate.yaml
       - ls -la build/libs/distributions
 artifacts:
   files:
     - build/libs/distributions/aws-lambda-ci-cd.zip
-    - outputSamTemplate.yml
+    - outputSamTemplate.yaml
