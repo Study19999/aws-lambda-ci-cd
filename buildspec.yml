@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+  build:
+    commands:
+      - echo Build started on `date`
+      - gradle build
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - sam package --s3-bucket maria.nascu.webapp-bucket --template-file samTemplate.yml --output-template-file outputSamTemplate.yml
+      - ls -la build/libs/distributions
+artifacts:
+  files:
+    - build/libs/distributions/aws-lambda-ci-cd.zip
+    - outputSamTemplate.yml
